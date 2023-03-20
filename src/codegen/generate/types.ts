@@ -1,8 +1,9 @@
-import { OperationObject } from "types"
+import { OperationObject, ParameterObject } from "../types"
 
 export class OperationSpec {
    comment: string = null
    schema: OperationObject = null
+   params: ParameterObject[] = null
    constructor(
       public name: string = null,
    ) {

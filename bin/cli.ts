@@ -5,8 +5,8 @@ import path from "path";
 import { URL } from "node:url";
 import glob from "fast-glob";
 import parser from "yargs-parser";
-import openapiTS from "../src";
-import { c, error } from "../src/utils";
+import openapiTS from "../src/codegen";
+import { c, error } from "../src/codegen/utils";
 
 const HELP = `Usage
   $ openapi-typescript [input] [options]

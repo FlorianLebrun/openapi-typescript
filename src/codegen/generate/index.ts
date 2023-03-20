@@ -1,4 +1,5 @@
-import { escStr } from "utils";
+import { OperationInfos } from "../..";
+import { escStr } from "../utils";
 import { OpenAPISpec, TagSpec } from "./types";
 
 type Files = { [filename: string]: string }
@@ -17,7 +18,7 @@ export function generateApiCatalogFiles(files: Files, tag: TagSpec, ctx: OpenAPI
    const code = []
 
    code.push(
-      `import { NewApis, Invokable } from \"@ewam/openapi-typescript\"`,
+      `import { NewApis, Invokable } from \"@ewam/openapi-helpers\"`,
       `import { operations } from \"../types\"`,
       `import data from \"../data/${tag.name}\"`,
       ``
@@ -37,12 +38,24 @@ export function generateApiCatalogFiles(files: Files, tag: TagSpec, ctx: OpenAPI
    code.push(``)
    files[`api/${tag.name}.ts`] = code.join("\n")
 
-   const data = {}
+   const data = {
+      server: ctx.name,
+      paths: {}
+   }
    for (const path of tag.paths) {
-      data[path.path] = {}
+      data.paths[path.path] = {}
       for (const method in path.methods) {
+         const infos: OperationInfos = {}
          const oper = path.methods[method]
-         data[path.path][method] = {}
+         if (oper.params) {
+            for (const param of oper.params) {
+               if (param.in === "query") {
+                  if (!infos.headers) infos.headers = []
+                  infos.headers.push(param.name)
+               }
+            }
+         }
+         data.paths[path.path][method] = infos
       }
    }
    files[`data/${tag.name}.js`] = "export default " + JSON.stringify(data, null, 2)

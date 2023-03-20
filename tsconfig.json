@@ -14,13 +14,12 @@
     "sourceMap": true,
     "strict": true,
     "strictNullChecks": false,
-    "useDefineForClassFields": true,
     "outDir": "./dist",
     "rootDir": ".",
     "baseUrl": ".",
     "paths": {
       "@ewam/openapi-typescript/helpers": [
-        "src/helpers.ts"
+        "src/index.ts"
       ],
       "*": [
         "src/*",

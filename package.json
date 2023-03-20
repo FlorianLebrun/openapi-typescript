@@ -1,18 +1,16 @@
 {
-  "name": "@ewam/openapi-typescript",
-  "version": "1.0.0",
+  "name": "@ewam/openapi-helpers",
+  "version": "1.0.0-alpha.0",
   "license": "MIT",
   "type": "module",
-  "publishConfig": {
-    "access": "restricted"
-  },
+  "private": true,
   "bin": {
-    "openapi-typescript": "./dist/bin/cli.js"
+    "openapi-typescript": "./bin/cli.js"
   },
-  "main": "./dist/src/helpers.js",
+  "main": "./src/index.js",
   "exports": {
-    ".": "./dist/src/helpers.js",
-    "./generator": "./dist/src/index.js"
+    ".": "./src/index.js",
+    "./codegen": "./src/codegen/index.js"
   },
   "scripts": {
     "build": "node ./scripts/build.mjs",
