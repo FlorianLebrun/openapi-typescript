@@ -112,41 +112,35 @@ export class BinaryContent extends Content {
    }
 }
 
-export const defaultContentClasses: { [type: string]: new (type?: string) => Content } = {
+export type ContentCtor = new (type?: string) => Content
+
+export const defaultContentClasses: { [type: string]: ContentCtor } = {
    "plain/text": TextualContent,
    "application/json": JSONContent,
    "application/octet-stream": BinaryContent,
 }
 
-export function createContent(type: string): Content {
+export function resolveContentType(type: string): ContentCtor {
    let cls = defaultContentClasses[type]
    if (!cls) {
       for (const ctype in defaultContentClasses) {
          if (type.startsWith(ctype)) {
-            cls = defaultContentClasses[ctype]
-            break
+            return defaultContentClasses[ctype]
          }
       }
-      if (!cls) {
-         cls = BinaryContent
-      }
    }
+   return null
+}
+
+export function createContent(type: string): Content {
+   let cls = resolveContentType(type)
+   if (!cls) return null
    return new cls(type)
 }
 
 export function createStringContent(type: string, data: string): Content {
-   let cls = defaultContentClasses[type]
-   if (!cls) {
-      for (const ctype in defaultContentClasses) {
-         if (type.startsWith(ctype)) {
-            cls = defaultContentClasses[ctype]
-            break
-         }
-      }
-      if (!cls) {
-         cls = TextualContent
-      }
-   }
+   let cls = resolveContentType(type)
+   if (!cls) cls = TextualContent
    try {
       const content = new cls(type)
       content.fromString(data)
@@ -155,6 +149,21 @@ export function createStringContent(type: string, data: string): Content {
    catch (e) {
       const content = new TextualContent(type)
       content.fromString(data)
+      return content
+   }
+}
+
+export function createBufferContent(type: string, data: Buffer): Content {
+   let cls = resolveContentType(type)
+   if (!cls) cls = TextualContent
+   try {
+      const content = new cls(type)
+      content.fromBuffer(data)
+      return content
+   }
+   catch (e) {
+      const content = new BinaryContent(type)
+      content.fromBuffer(data)
       return content
    }
 }

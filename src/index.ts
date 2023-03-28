@@ -127,6 +127,9 @@ export class CommonInvokation<Op extends OperationType = OperationType> implemen
          }
          this.path = parts.join("")
       }
+      else {
+         this.path = path
+      }
    }
    get request() {
       return this
