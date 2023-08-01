@@ -174,10 +174,11 @@ export type GenericApis = {
 
 export function NewGenericApis(data: GenericApisData): GenericApis {
    const apis: GenericApis = {}
-   for (const path in data.paths) {
+   const { paths } = data
+   for (const path in paths) {
       const methods = apis[path] = {}
-      for (const method in data[path]) {
-         methods[method] = (params) => new CommonInvokation(method, path, params, data[path][method], getGlobalSession(data.server))
+      for (const method in paths[path]) {
+         methods[method] = (params) => new CommonInvokation(method, path, params, paths[path][method], getGlobalSession(data.server))
       }
    }
    return apis
